@@ -9,6 +9,8 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// test Jenkins build
+
 mongoose
   .connect("mongodb://localhost:27017/todo_db_1")
   .then(() => console.log("MongoDB connecté"))
