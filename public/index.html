@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Task Master Pro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .task-manager {
+      background: rgba(255, 255, 255, 0.95);
+      width: 100%;
+      max-width: 600px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      padding: 30px;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .app-header h1 {
+      color: #2d3436;
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 4px rgba(108, 92, 231, 0.1);
+    }
+
+    .app-header p {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    #newTaskInput {
+      flex: 1;
+      padding: 18px 22px;
+      border: 2px solid #dfe6e9;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      color: #2d3436;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    #newTaskInput:focus {
+      outline: none;
+      border-color: #6c5ce7;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+    }
+
+    #newTaskInput::placeholder {
+      color: #b2bec3;
+    }
+
+    #addTaskBtn {
+      background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    }
+
+    #addTaskBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(108, 92, 231, 0.4);
+    }
+
+    #addTaskBtn:active {
+      transform: translateY(0);
+    }
+
+    .tasks-container {
+      list-style: none;
+    }
+
+    .task-element {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-left: 5px solid #6c5ce7;
+      transition: all 0.3s ease;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .task-element:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .task-element.completed {
+      opacity: 0.8;
+      border-left-color: #00b894;
+      background: #f9f9f9;
+    }
+
+    .task-element.removing {
+      transform: translateX(100px);
+      opacity: 0;
+    }
+
+    .task-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+    }
+
+    .task-checkbox {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      accent-color: #6c5ce7;
+    }
+
+    .task-text {
+      font-size: 1.2rem;
+      color: #2d3436;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .task-element.completed .task-text {
+      color: #636e72;
+      text-decoration: line-through;
+    }
+
+    .delete-task-btn {
+      background: #ff7675;
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .delete-task-btn:hover {
+      background: #d63031;
+      transform: scale(1.1);
+    }
+
+    .task-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      color: #636e72;
+      font-size: 0.95rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #b2bec3;
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #636e72;
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #636e72;
+      font-size: 0.9rem;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="task-manager">
+    <div class="app-header">
+      <h1>Task Master Pro</h1>
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="newTaskInput" placeholder="What needs to be done?" />
+      <button id="addTaskBtn">Add Task</button>
+    </div>
+
+    <ul class="tasks-container" id="tasksList"></ul>
+
+  </div>
+
+  <script>
+
+const API_URL = "http://localhost:3000/tasks";
+
+const input = document.getElementById("newTaskInput");
+const addBtn = document.getElementById("addTaskBtn");
+const list = document.querySelector(".tasks-container");
+
+/* Load tasks from DB */
+async function loadTasks() {
+  list.innerHTML = "";
+  const res = await fetch(API_URL);
+  const tasks = await res.json();
+
+  if (tasks.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <h3>No tasks yet</h3>
+    </div>`;
+    return;
+  }
+
+  tasks.forEach(renderTask);
+}
+
+/* Render task */
+function renderTask(task) {
+  const li = document.createElement("li");
+  li.className = `task-element ${task.completed ? "completed" : ""}`;
+
+  li.innerHTML = `
+    <div class="task-content">
+      <input type="checkbox" class="task-checkbox" ${task.completed ? "checked" : ""}>
+      <span class="task-text">${task.title}</span>
+    </div>
+    <button class="delete-task-btn">×</button>
+  `;
+
+  /* Toggle complete */
+  li.querySelector(".task-checkbox").addEventListener("change", async (e) => {
+    await fetch(`${API_URL}/${task._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed: e.target.checked })
+    });
+    loadTasks();
+  });
+
+  /* Delete */
+  li.querySelector(".delete-task-btn").addEventListener("click", async () => {
+    await fetch(`${API_URL}/${task._id}`, { method: "DELETE" });
+    loadTasks();
+  });
+
+  list.appendChild(li);
+}
+
+/* Add new task */
+addBtn.addEventListener("click", async () => {
+  if (!input.value.trim()) return;
+
+  await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: input.value })
+  });
+
+  input.value = "";
+  loadTasks();
+});
+
+/* Load on start */
+loadTasks();
+
+  </script>
+</body>
+</html>
